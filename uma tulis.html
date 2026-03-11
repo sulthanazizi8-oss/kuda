@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Animasi Kanji Uma - Akurasi Final</title>
+    <style>
+        /* Tampilan putih polos, looping otomatis, tanpa tombol */
+        body { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            background-color: #ffffff; 
+            margin: 0;
+            overflow: hidden;
+        }
+
+        svg { 
+            width: 400px; 
+            height: 400px; 
+        }
+
+        path { 
+            fill: none; 
+            stroke: #000000; /* Hitam pekat */
+            stroke-width: 4.5; 
+            stroke-linecap: round; 
+            stroke-linejoin: round; 
+        }
+        
+        /* Gaya Nomor Urutan */
+        text { 
+            font-size: 6.5px; 
+            font-weight: bold; 
+            fill: #000000; 
+            opacity: 0; 
+            transition: opacity 0.3s; 
+            font-family: Arial, sans-serif;
+        }
+
+        .show-num { opacity: 1; }
+    </style>
+</head>
+<body>
+
+    <svg viewBox="0 0 100 100" id="kanji-svg">
+        <!-- 10 Guratan Kanji Uma (馬) Berdasarkan Gambar Sumber [1] -->
+        <path id="p1" d="M30,12 L30,48" /> <!-- 1: Vertikal kiri -->
+        <path id="p2" d="M30,12 L75,12" /> <!-- 2: Horisontal atas -->
+        <path id="p3" d="M52,12 L52,48" /> <!-- 3: Vertikal tengah (Berhenti di p6) -->
+        <path id="p4" d="M30,24 L72,24" /> <!-- 4: Horisontal tengah 1 -->
+        <path id="p5" d="M30,36 L72,36" /> <!-- 5: Horisontal tengah 2 -->
+        <path id="p6" d="M30,48 L82,48 Q90,48 90,56 L85,78 Q82,88 72,83" /> <!-- 6: Hook bawah -->
+        
+        <!-- Empat titik bawah (7-10) -->
+        <path id="p7" d="M22,68 Q20,80 19,90" /> <!-- 7: Titik 1 -->
+        <path id="p8" d="M38,65 Q41,77 43,87" /> <!-- 8: Titik 2 -->
+        <path id="p9" d="M54,63 Q57,75 59,85" /> <!-- 9: Titik 3 -->
+        <!-- Guratan 10 diperpendek dan ditarik sedikit ke kiri agar tidak menyentuh kail p6 -->
+        <path id="p10" d="M70,61 Q73,70 75,76" /> <!-- 10: Titik 4 (Lebih pendek & aman) -->
+
+        <!-- Penempatan nomor urutan (diselaraskan agar tidak tertutup garis) -->
+        <text x="24" y="16" id="n1">1</text>
+        <text x="35" y="10" id="n2">2</text>
+        <text x="46" y="21" id="n3">3</text>
+        <text x="35" y="22" id="n4">4</text>
+        <text x="35" y="34" id="n5">5</text>
+        <text x="35" y="46" id="n6">6</text>
+        <text x="14" y="70" id="n7">7</text>
+        <text x="28" y="68" id="n8">8</text>
+        <text x="44" y="65" id="n9">9</text>
+        <text x="62" y="58" id="n10">10</text> <!-- Nomor 10 dipastikan berada di atas titiknya -->
+    </svg>
+
+    <script>
+        const totalStrokes = 10;
+
+        function animateLoop() {
+            // Reset state awal
+            for (let i = 1; i <= totalStrokes; i++) {
+                const path = document.getElementById(`p${i}`);
+                const num = document.getElementById(`n${i}`);
+                const length = path.getTotalLength();
+                
+                path.style.transition = 'none';
+                path.style.strokeDasharray = length;
+                path.style.strokeDashoffset = length;
+                num.classList.remove('show-num');
+            }
+
+            // Jalankan animasi menulis berurutan 1-10
+            let delay = 300; 
+            for (let i = 1; i <= totalStrokes; i++) {
+                setTimeout(() => {
+                    const path = document.getElementById(`p${i}`);
+                    const num = document.getElementById(`n${i}`);
+                    
+                    num.classList.add('show-num'); 
+                    path.style.transition = 'stroke-dashoffset 0.6s ease-in-out';
+                    path.style.strokeDashoffset = '0';
+                }, delay);
+                
+                delay += 850; 
+            }
+
+            // Loop terus menerus
+            setTimeout(animateLoop, delay + 2500);
+        }
+
+        window.onload = animateLoop;
+    </script>
+</body>
+</html>
